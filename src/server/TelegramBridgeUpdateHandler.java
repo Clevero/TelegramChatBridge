@@ -88,6 +88,42 @@ public class TelegramBridgeUpdateHandler extends TelegramLongPollingBot implemen
 							
 							
 					}//end else if()
+					else if(message.hasText() && message.getText().equals("/list")){
+						//wir sollen eine Liste mit den ganzen usern erstellen
+						
+						ArrayList<Long> numbers = NumberContainer.getInstance().getAllNumbers();
+						ArrayList<String> users = new ArrayList<>();
+						
+						for(int i = 0; i < numbers.size(); i++){
+							try {
+								Chat chat = getChat(new GetChat().setChatId(numbers.get(i).toString()));
+								users.add(this.getSummaryOfUser(chat.getUserName(), chat.getFirstName(), chat.getLastName()));
+							} catch (TelegramApiException e) {
+								// TODO: do some error handling
+								e.printStackTrace();
+							}//end catch()
+							
+						}//end for()
+						
+						String messageText = "You have '" + users.size() + "' users (incl. you)" + '\n';
+						if(users.size() > 1){
+							messageText += "Here is a list of your users:" + '\n';
+							for(int i = 0; i < users.size(); i++){
+								messageText += users.get(i) + '\n';
+							}//end for()
+						}//end if()
+						SendMessage sendMessageRequest = new SendMessage();
+						sendMessageRequest.enableMarkdown(true);
+						sendMessageRequest.setText(messageText);
+						sendMessageRequest.setChatId(message.getChatId().toString());
+						try {
+							sendMessage(sendMessageRequest);
+						} catch (TelegramApiException e) {
+							// TODO: do some error handling
+							e.printStackTrace();
+						}//end catch()
+						
+					}//end else if()
 					else if(message.getText().startsWith("/set")){
 						String[] data = message.getText().split(" ");
 						
@@ -237,6 +273,20 @@ public class TelegramBridgeUpdateHandler extends TelegramLongPollingBot implemen
 	public String getBotToken() {
 		return BotCOnfigContainer.getInstance().getToken();
 	}//end getBotToken()
+	
+	private String getSummaryOfUser(String username, String firstName, String lastName){
+		StringBuilder summaryBuilder = new StringBuilder();
+		
+		summaryBuilder.append(firstName);
+		if(lastName != null){
+			summaryBuilder.append(" " + lastName);
+		}//end if()
+		
+		if(username != null){
+			summaryBuilder.append(", aka @" + username);
+		}//end if()
+		return summaryBuilder.toString();
+	}//end getSummaryOfuser()
 	
 	private boolean onStart(Message message){
 		//TODO: nummer zum container addeden
