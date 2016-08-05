@@ -109,7 +109,7 @@ public class NumberDao {
 	
 	private boolean openWriter(){
 		try {
-			this.writer = new BufferedWriter(new FileWriter("numbers.txt"));
+			this.writer = new BufferedWriter(new FileWriter(System.getProperty("user.home") + this.NUMBER_PATH));
 		} catch (IOException e) {
 			//TODO: so some error handling
 			return false;
