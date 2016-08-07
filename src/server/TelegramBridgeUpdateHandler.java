@@ -107,9 +107,9 @@ public class TelegramBridgeUpdateHandler extends TelegramLongPollingBot implemen
 						
 						String messageText = "You have '" + users.size() + "' users (incl. you)" + '\n';
 						if(users.size() > 1){
-							messageText += "Here is a list of your users:" + '\n';
+							messageText += "Here is a list of your users:" + '\n' + '\n';
 							for(int i = 0; i < users.size(); i++){
-								messageText += users.get(i) + '\n';
+								messageText += i+1 + ". " + users.get(i) + '\n' + '\n';
 							}//end for()
 						}//end if()
 						SendMessage sendMessageRequest = new SendMessage();
