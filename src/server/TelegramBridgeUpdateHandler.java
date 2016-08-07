@@ -113,7 +113,6 @@ public class TelegramBridgeUpdateHandler extends TelegramLongPollingBot implemen
 							}//end for()
 						}//end if()
 						SendMessage sendMessageRequest = new SendMessage();
-						sendMessageRequest.enableMarkdown(true);
 						sendMessageRequest.setText(messageText);
 						sendMessageRequest.setChatId(message.getChatId().toString());
 						try {
